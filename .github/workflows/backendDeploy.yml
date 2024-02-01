@@ -21,9 +21,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build the app
-        run: echo 'building'
-
       - name: Deploy to Render
         uses: JamesIves/github-pages-deploy-action@4.1.2
         with:
