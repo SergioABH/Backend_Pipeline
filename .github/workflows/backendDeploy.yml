@@ -1,0 +1,32 @@
+name: Backend Render Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 14.21
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the app
+        run: echo 'building'
+
+      - name: Deploy to Render
+        uses: JamesIves/github-pages-deploy-action@4.1.2
+        with:
+          branch: gh-pages
+          folder: src
+          token: ${{ secrets.RENDER_API_TOKEN }}
