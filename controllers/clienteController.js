@@ -21,7 +21,7 @@ const clienteController = {
         db.query('SELECT * FROM clientes', (err, result) => {
             if (err) {
                 console.log(err);
-                res.status(500).json({ error: "Error al obtener la lista de clientes" });
+                res.status(500).json({ error: "No hay clientes" });
             } else {
                 res.status(200).json(result.rows);
             }
