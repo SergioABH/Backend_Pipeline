@@ -1,4 +1,4 @@
-name: Despliegue a Render
+name: Backend Render Deploy
 
 on:
   push:
@@ -6,25 +6,23 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Instalar dependencias
-      run: npm install
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 14.21
 
-    - name: Compilar aplicación
-      run: npm run build
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Empaquetar aplicación
-      run: zip -r app.zip .
-
-    - name: Desplegar a Render
-      uses: render/deploy@v1
-      with:
-        service: Test
-        environment: production
-        token: ${{ secrets.RENDER_TOKEN }}
-        archive: app.zip
+      - name: Deploy to Render
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
