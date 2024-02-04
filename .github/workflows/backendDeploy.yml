@@ -24,9 +24,9 @@ jobs:
       - name: Deploy to Render
         uses: bounceapp/render-action@0.6.0
         with:
-          render-token: ${{ secrets.RENDER_API_KEY }}
+          render-token: rnd_PQn8Ert7QUo7MBQP5kW85qGOPkpI
           github-token: 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
-          service-id: ${{ secrets.SERVICE_ID }}
+          service-id: srv-cn017h7qd2ns73cffs30
           retries: 20
           wait: 16000
           sleep: 30000
