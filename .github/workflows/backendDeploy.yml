@@ -1,4 +1,4 @@
-name: Backend Render Deploy
+name: Despliegue a Render
 
 on:
   push:
@@ -6,24 +6,25 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 14.21
+    - name: Instalar dependencias
+      run: npm install
 
-      - name: Install dependencies
-        run: npm ci
+    - name: Compilar aplicación
+      run: npm run build
 
-      - name: Deploy to Render
-        uses: JamesIves/github-pages-deploy-action@4.1.2
-        with:
-          branch: gh-pages
-          folder: src
-          token: ${{ secrets.RENDER_API_TOKEN }}
+    - name: Empaquetar aplicación
+      run: zip -r app.zip .
+
+    - name: Desplegar a Render
+      uses: render/deploy@v1
+      with:
+        service: Test
+        environment: production
+        token: ${{ secrets.RENDER_TOKEN }}
+        archive: app.zip
