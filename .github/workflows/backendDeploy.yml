@@ -22,12 +22,9 @@ jobs:
         run: npm ci
 
       - name: Deploy to Render
-        uses: bounceapp/render-action@0.6.0
+        uses: johnbeynon/render-deploy-action@v0.0.8
         with:
-          render-token: rnd_PQn8Ert7QUo7MBQP5kW85qGOPkpI
-          github-token: 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
           service-id: srv-cn017h7qd2ns73cffs30
-          retries: 20
-          wait: 16000
-          sleep: 30000
+          api-key: rnd_PQn8Ert7QUo7MBQP5kW85qGOPkpI
+          wait-for-success: true
 
