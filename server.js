@@ -19,7 +19,7 @@ const options = {
                 description: "Entorno de desarrollo",
             },
             {
-                url: "https://backend2-mern.onrender.com/",
+                url: "https://backend-istc.onrender.com/",
                 description: "Entorno de producción",
               },
         ],
