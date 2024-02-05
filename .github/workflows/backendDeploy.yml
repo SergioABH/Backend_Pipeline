@@ -24,7 +24,7 @@ jobs:
       - name: Deploy to Render
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
-          service-id: srv-cn017h7qd2ns73cffs30
-          api-key: rnd_PQn8Ert7QUo7MBQP5kW85qGOPkpI
+          service-id: ${{ secrets.BACKEND_ID }}
+          api-key: ${{ secrets.API_KEY }}
           wait-for-success: true
 
