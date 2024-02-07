@@ -23,5 +23,8 @@ jobs:
 
       - name: Deploy to Render
         run: |
-          npm install render
-          node scripts/deploy.js ${{ secrets.BACKEND_ID }} ${{ secrets.API_KEY }} ${{ github.sha }}
+          curl -X POST \
+            https://api.render.com/deploy/${{ secrets.BACKEND_ID }}?key=2Cau52g5CZE \
+            -H "Authorization: Bearer ${{ secrets.API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"gitCommit": "${{ github.sha }}"}'
