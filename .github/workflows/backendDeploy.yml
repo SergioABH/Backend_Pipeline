@@ -22,9 +22,9 @@ jobs:
         run: npm ci
 
       - name: Deploy to Render
-        uses: johnbeynon/render-deploy-action@v0.0.8
-        with:
-          service-id: ${{ secrets.BACKEND_ID }}
-          api-key: ${{ secrets.API_KEY }}
-          wait-for-success: true
-
+        run: |
+          curl -X POST \
+            https://api.render.com/deploy/${{ secrets.BACKEND_ID }}?key=2Cau52g5CZE \
+            -H "Authorization: Bearer ${{ secrets.API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"gitCommit": "${{ github.sha }}"}'
