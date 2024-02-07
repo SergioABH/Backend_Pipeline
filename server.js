@@ -3,7 +3,6 @@ const cors = require("cors");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const clienteRoutes = require("./routes/clienteRoutes");
-const { FRONTEND_URL } = require('./config.js');
 const { PORT } = require('./config.js');
 
 const options = {
