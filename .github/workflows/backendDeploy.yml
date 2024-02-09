@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Wait for PostgreSQL to be ready
+        run: sleep 30
+
       - name: Set up PostgreSQL
         run: |
           sleep 10
