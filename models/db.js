@@ -13,7 +13,10 @@ const db = new pg.Pool({
   user: DB_USER,
   password: DB_PASSWORD,
   database: DB_NAME,
-  port: DB_PORT
+  port: DB_PORT,
+  ssl: {
+    rejectUnauthorized: false
+  }
 })
 
 module.exports = db
