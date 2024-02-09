@@ -1,6 +1,6 @@
-const express = require("express");
-const router = express.Router();
-const clienteController = require("../controllers/clienteController");
+const express = require('express')
+const router = express.Router()
+const clienteController = require('../controllers/clienteController')
 
 /**
  * @swagger
@@ -32,7 +32,7 @@ const clienteController = require("../controllers/clienteController");
  *       '500':
  *         description: Error al crear el cliente
  */
-router.post("/create", clienteController.createCliente);
+router.post('/create', clienteController.createCliente)
 
 /**
  * @swagger
@@ -45,7 +45,7 @@ router.post("/create", clienteController.createCliente);
  *       '500':
  *         description: Error al obtener la lista de clientes
  */
-router.get("/clientes", clienteController.getClientes);
+router.get('/clientes', clienteController.getClientes)
 
 /**
  * @swagger
@@ -72,7 +72,7 @@ router.get("/clientes", clienteController.getClientes);
  *       '500':
  *         description: Error al actualizar el cliente
  */
-router.put("/update", clienteController.updateCliente);
+router.put('/update', clienteController.updateCliente)
 
 /**
  * @swagger
@@ -91,6 +91,6 @@ router.put("/update", clienteController.updateCliente);
  *       '500':
  *         description: Error al eliminar el cliente
  */
-router.delete("/delete/:id", clienteController.deleteCliente);
+router.delete('/delete/:id', clienteController.deleteCliente)
 
-module.exports = router;
+module.exports = router

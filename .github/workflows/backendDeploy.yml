@@ -21,7 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run Jest tests
+        run: npm run test
+
       - name: Deploy to Render
+        if: success()
         run: |
           curl -X POST \
             https://api.render.com/deploy/${{ secrets.BACKEND_ID }}?key=2Cau52g5CZE \
