@@ -24,7 +24,7 @@ jobs:
       - name: Run Jest tests
         run: npm run test --force-exit
 
-      - name: Deploy to Render
+      - name: Deploy
         if: success()
         run: |
           curl -X POST \
