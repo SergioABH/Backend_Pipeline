@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  test-and-deploy:
     runs-on: ubuntu-22.04
 
     steps:
@@ -24,7 +24,8 @@ jobs:
       - name: Run Jest tests
         run: npm run test
 
-      - name: Deploy to Render
+      - name: Deploy to Render (only if tests pass)
+        if: success()
         run: |
           curl -X POST \
             https://api.render.com/deploy/${{ secrets.BACKEND_ID }}?key=2Cau52g5CZE \
