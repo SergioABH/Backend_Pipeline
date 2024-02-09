@@ -22,7 +22,10 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: node run-tests.js
+        run: |
+          node run-tests.js &
+          wait $!
+          sleep 120
 
       - name: Kill run-tests.js process
         run: pkill -f run-tests.js
