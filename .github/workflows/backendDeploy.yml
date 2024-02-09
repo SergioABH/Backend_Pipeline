@@ -22,9 +22,9 @@ jobs:
         run: npm ci
 
       - name: Run Jest tests
-        run: npm run test --force-exit
+        run: npm run test
 
-      - name: Deploy
+      - name: Deploy to Render
         if: success()
         run: |
           curl -X POST \
