@@ -24,9 +24,9 @@ describe('Rutas de la API', () => {
   test('PUT /update debe actualizar un cliente', async () => {
     const cambiosCliente = {
       id: 2,
-      nombre: 'Andres',
-      apellido: 'BHenao',
-      correo: 'testJest5@gmail.com'
+      nombre: 'Sergio',
+      apellido: 'Bedoya',
+      correo: 'testJest2@gmail.com'
     }
 
     const response = await request(app).put('/update').send(cambiosCliente)
@@ -35,7 +35,7 @@ describe('Rutas de la API', () => {
   })
 
   test('DELETE /delete/:id debe eliminar un cliente', async () => {
-    const idCliente = 3
+    const idCliente = 11
 
     const response = await request(app).delete(`/delete/${idCliente}`)
 
