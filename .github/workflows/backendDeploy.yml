@@ -21,8 +21,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Jest tests
-        run: npm run test
+      - name: Run tests
+        run: node run-tests.js
+
+      - name: Kill run-tests.js process
+        run: pkill -f run-tests.js
+        timeout-minutes: 2
 
       - name: Deploy to Render
         if: success()
