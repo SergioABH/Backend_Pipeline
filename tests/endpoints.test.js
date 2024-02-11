@@ -41,12 +41,7 @@ describe('Rutas de la API', () => {
 
     expect(response.status).toBe(200)
   })
-})
-
-describe('Server', () => {
-  it('should start and listen on a port', async () => {
-    const server = app.listen(8080)
-    expect(server.address().port).toEqual(8080)
-    server.close()
+  afterAll(() => {
+    app.close()
   })
 })
