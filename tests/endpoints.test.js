@@ -11,9 +11,9 @@ describe('Rutas de la API', () => {
 
   test('POST /create debe crear un nuevo cliente', async () => {
     const nuevoCliente = {
-      nombre: 'andresS',
-      apellido: 'bedoyaH',
-      correo: 'testJest11gmail.com'
+      nombre: 'jsdfg',
+      apellido: 'dksuig',
+      correo: 'testJest12gmail.com'
     }
 
     const response = await request(app).post('/create').send(nuevoCliente)
@@ -23,7 +23,7 @@ describe('Rutas de la API', () => {
 
   test('PUT /update debe actualizar un cliente', async () => {
     const cambiosCliente = {
-      id: 13,
+      id: 16,
       nombre: 'Sergio',
       apellido: 'Bedoya',
       correo: 'testJest2@gmail.com'
@@ -35,10 +35,18 @@ describe('Rutas de la API', () => {
   })
 
   test('DELETE /delete/:id debe eliminar un cliente', async () => {
-    const idCliente = 14
+    const idCliente = 17
 
     const response = await request(app).delete(`/delete/${idCliente}`)
 
     expect(response.status).toBe(200)
+  })
+})
+
+describe('Server', () => {
+  it('should start and listen on a port', async () => {
+    const server = app.listen(8080)
+    expect(server.address().port).toEqual(8080)
+    server.close()
   })
 })
