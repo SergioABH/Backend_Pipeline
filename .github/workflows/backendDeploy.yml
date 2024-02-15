@@ -1,9 +1,12 @@
 name: Backend Render Deploy
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
+    filters:
+      tags:
+        only:
+          - v1.0.0
 
 jobs:
   test-and-deploy:
