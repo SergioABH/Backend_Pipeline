@@ -26,7 +26,7 @@ jobs:
 
     - name: Versionamiento
       id: versionamiento
-      uses: ./versionamiento
+      uses: ./versionamiento.js
       with:
         branch: ${{ github.ref }}
         commit-message: 'Actualización de versión'
