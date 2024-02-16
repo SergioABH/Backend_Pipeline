@@ -1,41 +1,73 @@
-name: Versionamiento
+name: Backend Render Deploy
 
 on:
   push:
     branches:
-      - '**'
-    paths:
-      - '**'
-      - '!package.json'
+      - 'main'
+      - 'development'
+      - 'feature/**'
+      - 'bugfix/**'
+      - 'hotfix/**'
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - 'development'
+
+  # Agregar evento 'release' para manejar etiquetas
+  release:
+    types: [created]
 
 jobs:
-  versionamiento:
-    runs-on: ubuntu-latest
+  test-and-deploy:
+    runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - name: Extraer versión de la etiqueta o crear versión pre-patch
+      id: extract_version
+      run: |
+        if [[ ${{ github.ref }} == refs/heads/main ]]; then
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION_FULL=$(echo v$VERSION)" >> "$GITHUB_ENV"
+        elif [[ ${{ github.ref }} == refs/heads/development ]]; then
+          VERSION=$(node -p "require('./package.json').version")
+          NEW_VERSION="${VERSION/-/}"
+          NEW_VERSION="${NEW_VERSION/+/}"
+          NEW_VERSION="$NEW_VERSION-rc.0"
+          echo "VERSION_FULL=$NEW_VERSION" >> "$GITHUB_ENV"
+        else
+          VERSION=$(node -p "require('./package.json').version")
+          NEW_VERSION="${VERSION/-/}"
+          NEW_VERSION="${NEW_VERSION/+/}"
+          NEW_PATCH=$(echo "$NEW_VERSION" | awk -F. '$3++' | awk -F. '{print $1"."$2"."$3}')
+          NEW_PRE_PATCH_VERSION="$NEW_VERSION-rc.0"
+          if [[ ${{ github.event.release }} ]]; then
+            COMMIT_SHA=$(expr substr ${{ github.event.release.tag_name }} 2)
+            NEW_PRE_PATCH_VERSION="$NEW_VERSION-rc.$COMMIT_SHA"
+          fi
+          echo "VERSION_FULL=$NEW_PRE_PATCH_VERSION" >> "$GITHUB_ENV"
+        fi
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
+    - uses: actions/checkout@v4
       with:
-        node-version: 14
+        fetch-depth: 0
 
-    - name: Install dependencies
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 14.21
+
+    - name: Instalar dependencias
       run: npm ci
 
-    - name: Versionamiento
-      id: versionamiento
-      uses: ./versionamiento.js
-      with:
-        branch: ${{ github.ref }}
-        commit-message: 'Actualización de versión'
+    - name: Ejecutar pruebas Jest
+      run: npm run test
 
-    - name: Commit and push
+    - name: Actualizar versión en package.json
       run: |
-        git config user.name "GitHub Actions"
-        git config user.email "github-actions@users.noreply.github.com"
-        git add package.json
-        git commit -m "${{ steps.versionamiento.outputs.commit-message }}"
-        git push
-      
+        VERSION_FULL="${{ env.VERSION_FULL }}"
+        npm version ${VERSION_FULL#v}
+
+    - name: Modificar etiqueta
+      run: |
+        VERSION=$(node -p "require('./package.json').version")
+        git tag -a "v$VERSION" -m "Creación de etiqueta para $VERSION"
