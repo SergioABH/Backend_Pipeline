@@ -1,37 +1,41 @@
-name: Backend Render Deploy
+name: Versioning
 
 on:
-  release:
-    types: [published]
-    filters:
-      tags:
-        only:
-          - v1.0.0
+  push:
+    branches:
+      - '**'
+    paths:
+      - '**'
 
 jobs:
-  test-and-deploy:
-    runs-on: ubuntu-22.04
+  versioning:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 14.21
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
 
-      - name: Install dependencies
-        run: npm ci
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Run Jest tests
-        run: npm run test
-
-      - name: Deploy to Render
-        if: success()
-        run: |
-          curl -X POST \
-            https://api.render.com/deploy/${{ secrets.BACKEND_ID }}?key=2Cau52g5CZE \
-            -H "Authorization: Bearer ${{ secrets.API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{"gitCommit": "${{ github.sha }}"}'
+    - name: Versioning
+      id: versioning
+      run: |
+        git fetch --tags
+        current_version=$(git describe --tags --abbrev=0)
+        if [[ $current_version == *-* ]]; then
+          version_type=prerelease
+        elif [[ $current_version == *.*.* ]]; then
+          version_type=patch
+        else
+          version_type=minor
+        fi
+        new_version=$(npm version $version_type)
+        git tag $new_version
+        git push origin $new_version
+      
