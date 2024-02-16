@@ -26,10 +26,10 @@ jobs:
     - name: Extraer versión de la etiqueta o crear versión pre-patch
       id: extract_version
       run: |
-        if [[ ${{ github.ref }} == refs/heads/main ]]; then
+        if [[ ${{ github.ref }} == refs/heads/main ]] then
           VERSION=$(node -p "require('./package.json').version")
           echo "VERSION_FULL=$(echo v$VERSION)" >> "$GITHUB_ENV"
-        elif [[ ${{ github.ref }} == refs/heads/development ]]; then
+        elif [[ ${{ github.ref }} == refs/heads/development ]] then
           VERSION=$(node -p "require('./package.json').version")
           NEW_VERSION="${VERSION/-/}"
           NEW_VERSION="${NEW_VERSION/+/}"
@@ -41,7 +41,7 @@ jobs:
           NEW_VERSION="${NEW_VERSION/+/}"
           NEW_PATCH=$(echo "$NEW_VERSION" | awk -F. '$3++' | awk -F. '{print $1"."$2"."$3}')
           NEW_PRE_PATCH_VERSION="$NEW_VERSION-rc.0"
-          if [[ ${{ github.event.release }} ]]; then
+          if [[ ${{ github.event.release }} ]] then
             COMMIT_SHA=$(expr substr ${{ github.event.release.tag_name }} 2)
             NEW_PRE_PATCH_VERSION="$NEW_VERSION-rc.$COMMIT_SHA"
           fi
