@@ -47,8 +47,8 @@ jobs:
           NEW_VERSION="${NEW_VERSION/+/}"
           NEW_PATCH=$(echo "$NEW_VERSION" | awk -F. '$3++' | awk -F. '{print $1"."$2"."$3}')
           NEW_PRE_PATCH_VERSION="$NEW_VERSION-rc.0"
-          if [[ ${{ github.ref }} == refs/heads/* ]]; then
-            COMMIT_SHA=$(expr substr ${{ github.ref }} 12)
+          if [[ ${{ github.ref }} == refs/heads/main ]]; then
+            COMMIT_SHA=$(expr substr refs/heads/main 12)
             NEW_PRE_PATCH_VERSION="$NEW_VERSION-rc.$COMMIT_SHA"
           fi
           echo "VERSION_FULL=$NEW_PRE_PATCH_VERSION" >> "$GITHUB_ENV"
