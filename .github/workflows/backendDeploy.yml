@@ -27,6 +27,7 @@ jobs:
       run: |
           git config user.email "bedoyasergio3@gmail.com"
           git config user.name "SergioABH"
+          git tag v1.0.0 db518fbd7251a
 
     - name: Versioning
       id: versioning
