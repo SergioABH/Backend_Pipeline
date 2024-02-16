@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "jest --runInBand --verbose --PORT=3000"
+    "test": "jest --runInBand --verbose --PORT=3000",
+    "eslint": "npx eslint . --fix"
   },
   "keywords": [],
   "author": "",
