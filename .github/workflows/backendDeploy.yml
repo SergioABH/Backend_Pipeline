@@ -20,10 +20,9 @@ jobs:
 
     - name: Set up GitHub Actions token
       run: |
-          echo "::set-output name=GITHUB_TOKEN::${{ secrets.GITHUB_TOKEN }}"
           curl --request POST \
             --url https://api.github.com/repos/${{ github.repository }}/actions/permissions \
-            --header 'authorization: Bearer $GITHUB_TOKEN' \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'content-type: application/json' \
             --data '{"permissions":{"pull-requests":{"admin":true}},"resources":{"actions":{"enabled":true},"repositories":{"allowed":true}}}'
 
