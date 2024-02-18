@@ -18,6 +18,10 @@ jobs:
       with:
         node-version: 14
 
+    - name: Set up GitHub Actions token
+      run: |
+          echo "GITHUB_TOKEN=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" >> $GITHUB_ENV
+
     - name: Install dependencies
       run: npm ci
 
