@@ -3,7 +3,7 @@ name: Patch Release
 on:
   push:
     branches:
-      - pre-patch
+      - main
 
 jobs:
   release:
