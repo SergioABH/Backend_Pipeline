@@ -19,8 +19,18 @@ jobs:
         node-version: 14
 
     - name: Set up GitHub Actions token
-      run: |
-          echo "GITHUB_TOKEN=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" >> $GITHUB_ENV
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.repos.createOrUpdateRepoPermission({
+            repo_id: context.repo.id,
+            permission: 'write',
+            user: github.repositoryOwner,
+          })
+          core.export('GITHUB_TOKEN', github.rest.tokens.createGitHubToken({
+            scopes: ['repo'],
+            note: 'GitHub Actions workflow',
+          }).data.token)
 
     - name: Install dependencies
       run: npm ci
