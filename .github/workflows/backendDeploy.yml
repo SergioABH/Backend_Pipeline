@@ -19,18 +19,13 @@ jobs:
         node-version: 14
 
     - name: Set up GitHub Actions token
-      uses: actions/github-script@v6
-      with:
-        script: |
-          github.rest.repos.createOrUpdateRepoPermission({
-            repo_id: context.repo.id,
-            permission: 'write',
-            user: github.repositoryOwner,
-          })
-          core.export('GITHUB_TOKEN', github.rest.tokens.createGitHubToken({
-            scopes: ['repo'],
-            note: 'GitHub Actions workflow',
-          }).data.token)
+      run: |
+          echo "::set-output name=GITHUB_TOKEN::${{ secrets.GITHUB_TOKEN }}"
+          curl --request POST \
+            --url https://api.github.com/repos/${{ github.repository }}/actions/permissions \
+            --header 'authorization: Bearer $GITHUB_TOKEN' \
+            --header 'content-type: application/json' \
+            --data '{"permissions":{"pull-requests":{"admin":true}},"resources":{"actions":{"enabled":true},"repositories":{"allowed":true}}}'
 
     - name: Install dependencies
       run: npm ci
