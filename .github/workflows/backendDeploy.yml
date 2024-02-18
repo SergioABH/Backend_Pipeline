@@ -1,4 +1,4 @@
-name: Update Version
+name: Patch Release
 
 on:
   push:
@@ -6,11 +6,11 @@ on:
       - main
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Set up Node.js
@@ -21,29 +21,23 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Get current version
-      id: get_version
+    - name: Extract current version
       run: |
         VERSION=$(node -p "require('./package.json').version")
-        echo "::set-output name=version::$VERSION"
+        echo "$VERSION" > version.txt
 
-    - name: Increment version
+    - name: Update version
       run: |
-        VERSION=${{ steps.get_version.outputs.version }}
+        VERSION=$(node -p "require('./package.json').version")
         MINOR=$(echo $VERSION | cut -d. -f2)
         NEW_VERSION="$(echo $VERSION | sed "s/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\)/\1.\2.$((MINOR+1)).0-rc.1/")"
-        echo "::set-output name=new_version::$NEW_VERSION"
-
-    - name: Update package.json
-      run: |
-        VERSION=${{ steps.get_version.outputs.version }}
-        NEW_VERSION=${{ steps.increment_version.outputs.new_version }}
-        sed -i "s/\"version\":\s\"$VERSION\"/\"version\":\s\"$NEW_VERSION\"/g" package.json
+        echo "$NEW_VERSION" > new_version.txt
 
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add package.json
+        git add package.json version.txt
         git commit -m "Update version to $NEW_VERSION"
-        git push
+        git remote set-url origin https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/${{ github.repository }}.git
+        git push origin main
