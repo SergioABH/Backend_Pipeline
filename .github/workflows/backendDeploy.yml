@@ -22,7 +22,7 @@ jobs:
       run: |
           git config user.name "GitHub Actions"
           git config user.email "github-actions@github.com"
-    
+
     - name: Install dependencies
       run: npm ci
 
@@ -39,14 +39,14 @@ jobs:
           # Authenticate using the GITHUB_TOKEN
           curl --request POST \
             --url https://api.github.com/repos/${{ github.repository }}/releases \
-            --header 'authorization: Bearer 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' \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'content-type: application/json' \
             --data '{"tag_name": "'$NEW_VERSION'", "name": "'$NEW_VERSION'", "body": "", "draft": false, "prerelease": false}'
 
           # Get the ID of the new release
           RELEASE_ID=$(curl --request GET \
             --url https://api.github.com/repos/${{ github.repository }}/releases \
-            --header 'authorization: Bearer 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' \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'content-type: application/json' \
             | jq '.[0].id' \
             | tr -d \")
@@ -54,6 +54,6 @@ jobs:
           # Upload the built files to the release
           curl --request POST \
             --url https://uploads.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets?name=my-built-file.tar.gz \
-            --header 'authorization: Bearer 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' \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --header 'content-type: application/octet-stream' \
             --data-binary '@path/to/my-built-file.tar.gz'
