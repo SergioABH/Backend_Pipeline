@@ -39,5 +39,5 @@ jobs:
         git config --local user.name "GitHub Action"
         git add package.json version.txt
         git commit -m "Update version to $NEW_VERSION"
-        git remote set-url origin https://x-access-token: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@github.com/${{ github.repository }}.git
+        git remote set-url origin https://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@github.com/${{ github.repository }}.git
         git push origin main
