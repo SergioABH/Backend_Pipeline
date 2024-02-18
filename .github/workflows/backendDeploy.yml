@@ -21,17 +21,6 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Configure Git
-      run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions@github.com"
-
-    - name: Check working directory status
-      run: |
-          if ! git diff-index --quiet HEAD --; then
-            git stash
-          fi
-
     - name: Increment version
       id: increment_version
       run: |
@@ -40,7 +29,26 @@ jobs:
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           echo "name=NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
 
-    - name: Push changes
+    - name: Create and publish release
       run: |
-          git remote set-url origin https://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@github.com/${{ github.repository }}.git
-          git push
+          # Authenticate using the GITHUB_TOKEN
+          curl --request POST \
+            --url https://api.github.com/repos/${{ github.repository }}/releases \
+            --header 'authorization: Bearer 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' \
+            --header 'content-type: application/json' \
+            --data '{"tag_name": "'$NEW_VERSION'", "name": "'$NEW_VERSION'", "body": "", "draft": false, "prerelease": false}'
+
+          # Get the ID of the new release
+          RELEASE_ID=$(curl --request GET \
+            --url https://api.github.com/repos/${{ github.repository }}/releases \
+            --header 'authorization: Bearer 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' \
+            --header 'content-type: application/json' \
+            | jq '.[0].id' \
+            | tr -d \")
+
+          # Upload the built files to the release
+          curl --request POST \
+            --url https://uploads.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets?name=my-built-file.tar.gz \
+            --header 'authorization: Bearer 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' \
+            --header 'content-type: application/octet-stream' \
+            --data-binary '@path/to/my-built-file.tar.gz'
