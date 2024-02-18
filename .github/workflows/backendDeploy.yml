@@ -5,8 +5,6 @@ on:
     branches:
       - main
 
-permissions: {}
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -19,14 +17,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: 14
-
-    - name: Set up GitHub Actions token
-      run: |
-          curl --request POST \
-            --url https://api.github.com/repos/${{ github.repository }}/actions/permissions \
-            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-            --header 'content-type: application/json' \
-            --data '{"permissions":{"pull-requests":{"admin":true}},"resources":{"actions":{"enabled":true},"repositories":{"allowed":true}}}'
 
     - name: Install dependencies
       run: npm ci
@@ -52,4 +42,5 @@ jobs:
 
     - name: Push changes
       run: |
+          git remote set-url origin https://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@github.com/${{ github.repository }}.git
           git push
